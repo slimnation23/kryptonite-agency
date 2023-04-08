@@ -23,43 +23,86 @@ for (let anchor of anchors) {
 }
 
 //Form
+const form = document.getElementById('feedback')
 const popup = document.querySelector('.popup__wrapper')
+const footer = document.querySelector('.footer')
+
 popup.addEventListener('click', () => (popup.style.display = 'none'))
+form.addEventListener('submit', formSend)
 
-$(document).ready(function () {
-  const form = document.querySelector('#feedback')
-  const formSubmit = document.querySelector('#feedback__submit')
+function formSend(e) {
+  e.preventDefault()
 
-  formSubmit.addEventListener('click', (e) => {
-    e.preventDefault()
-    const formName = document.querySelector('#feedback__name').value
-    const formTelegram = document.querySelector('#feedback__telegram').value
-    const formWebsite = document.querySelector('#feedback__website').value
-    const formEmail = document.querySelector('#feedback__email').value
-    const formSubject = document.querySelector('#feedback__subject').value
-    const formBudget = document.querySelector('#feedback__budget').value
-    const formMessage = document.querySelector('#feedback__message').value
+  const name = document.getElementById('feedback__name')
+  const telegram = document.getElementById('feedback__telegram')
+  const website = document.getElementById('feedback__website')
+  const email = document.getElementById('feedback__email')
+  const subject = document.getElementById('feedback__subject')
+  const budget = document.getElementById('feedback__budget')
+  const message = document.getElementById('feedback__message')
 
-    $.ajax({
-      type: 'POST',
-      url: 'post.php',
-      data:
-        'name=' + formName +
-        '&telegram=' + formTelegram +
-        '&website=' + formWebsite +
-        '&email=' + formEmail +
-        '&subject=' + formSubject +
-        '&budget=' + formBudget +
-        '&mes=' + formMessage,
-      success: function () {
-        console.log('success!')
-      },
-      error: function (err) {
-        console.log('error')
-      },
-    })
-    popup.style.display = 'block'
+  let error = formValidate(form)
 
-    form.reset()
-  })
-})
+  if (error === 0) {
+    footer.classList.add('_sending')
+
+    const xhr = new XMLHttpRequest()
+    xhr.open('POST', 'server.php')
+    xhr.setRequestHeader('Content-type', 'application/x-www-form-urlencoded')
+    xhr.onload = () => {
+      if (xhr.status === 200) {
+        popup.style.display = 'block'
+        form.reset()
+        footer.classList.remove('_sending')
+      } else {
+        alert('There was an error sending the email.')
+        footer.classList.remove('_sending')
+      }
+    }
+
+    xhr.send(
+      `name=${name.value}&telegram=${telegram.value}&website=${website.value}&email=${email.value}&subject=${subject.value}&budget=${budget.value}&message=${message.value}`
+    )
+  } else {
+    alert("Заповніть обов'язкові поля")
+  }
+}
+
+function formValidate() {
+  let error = 0
+  let formReq = document.querySelectorAll('._req')
+
+  for (let index = 0; index < formReq.length; index++) {
+    const input = formReq[index]
+    formRemoveError(input)
+
+    if (input.classList.contains('._email')) {
+      if (emailText(input)) {
+        formAddError(input)
+        error++
+      }
+    } else {
+      if (input.value === '') {
+        formAddError(input)
+        error++
+      }
+    }
+  }
+  return error
+}
+
+function formAddError(input) {
+  input.parentElement.classList.add('_error')
+  input.classList.add('_error')
+}
+
+function formRemoveError(input) {
+  input.parentElement.classList.remove('_error')
+  input.classList.remove('_error')
+}
+
+function emailText(input) {
+  return !/[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?/.test(
+    input.value
+  )
+}

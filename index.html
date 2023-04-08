@@ -374,34 +374,36 @@
           </div>
           <div class="col-lg-1 col-md-0"></div>
           <div class="col-lg-7 col-md-12">
-            <form class="form" id="feedback" action="/post.php" method="POST">
+            
+            <form class="form" id="feedback" action="server.php" method="POST">
               <div class="row form-inputs">
                 <div class="col-lg-6 col-sm-12">
-                  <input type="text" id="feedback__name" form="feedback" placeholder="Name *" />
-                  <input type="text" id="feedback__telegram" form="feedback" placeholder="Telegram username *" />
-                  <input
+                  <input class="_req" name="name" type="text" id="feedback__name" form="feedback" placeholder="Name *" />
+                  <input class="_req" name="telegram" type="text" id="feedback__telegram" form="feedback" placeholder="Telegram username *" />
+                  <input class="_req" name="website"
                     type="text" id="feedback__website" form="feedback"
                     placeholder="Socials (website/twitter etc.) *"
                   />
                 </div>
                 <div class="col-lg-6 col-sm-12">
-                  <input type="email" form="feedback" id="feedback__email" placeholder="Email address *" />
-                  <input type="text" form="feedback" id="feedback__subject" placeholder="Subject *" />
-                  <input type="number" form="feedback" id="feedback__budget" placeholder="Estimated budget *" />
+                  <input class="_req _email" name="email" type="email" form="feedback" id="feedback__email" placeholder="Email address *" />
+                  <input class="_req" name="subject" type="text" form="feedback" id="feedback__subject" placeholder="Subject *" />
+                  <input class="_req" name="budget" type="text" form="feedback" id="feedback__budget" placeholder="Estimated budget *" />
                 </div>
               </div>
               <span>How can we help you?</span>
               <div class="row">
                 <div class="col-12">
-                  <textarea placeholder="Message" id="feedback__message" form="feedback"></textarea>
+                  <textarea name="message" placeholder="Message" id="feedback__message" form="feedback"></textarea>
                 </div>
               </div>
               <div class="row">
                 <div class="col">
-                  <input type="submit" class="btn" value="SEND MESSAGE" id="feedback__submit" fdprocessedid="t209t">
+                  <button type="submit" class="btn" id="feedback__submit">SEND MESSAGE</button>
                 </div>
               </div>
             </form>
+
           </div>
         </div>
 
